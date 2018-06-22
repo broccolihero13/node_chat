@@ -1,21 +1,21 @@
 let socket = io();
-// let $ = jQuery;
+
 socket.on('connect', ()=>{
-  // socket.emit(`createMessage`,{
-  //   to: 'myfriend@example.com',
-  //   text: `This is the greatest song in the world`,
-  //   createdAt: new Date(),
-  //   fromURL: window.location.origin
-  // });
+  console.log(`server connected`);
 });
 socket.on('disconnect', ()=>{
   console.log(`server disconnected`);0
 });
 
 socket.on('newMessage', (msg)=>{
-  let li = `<li>${msg.from}: ${msg.text}</li>`
+  let li = `<li>${msg.from}: ${msg.text}</li>`;
   $('#messageBoard').append(li)
-})
+});
+
+socket.on('newLocationMessage', (msg)=>{
+  let li = `<li>${msg.from}: <a target="_blank" href="${msg.url}">${msg.url}</a>`;
+  $('#messageBoard').append(li)
+});
 
 $('#message-form').on('submit', (e)=>{
   e.preventDefault();
@@ -24,5 +24,21 @@ $('#message-form').on('submit', (e)=>{
     text: $('input[name="primaryText"]').val()
   }, (fromServer)=>{
     console.log(fromServer);
+  });
+});
+
+$('#sendLocation').on('click', ()=>{
+  if(!navigator.geolocation) {
+    return alert(`Geolocation is not available or is unsupported by your browswer.`)
+  }
+
+  navigator.geolocation.getCurrentPosition((position)=>{
+    console.log(position);
+    socket.emit('createLocationMessage', {
+      long: position.coords.longitude,
+      lat: position.coords.latitude
+    })
+  },()=>{
+    alert(`Unable to fetch location`);
   });
 });
