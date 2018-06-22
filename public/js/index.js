@@ -8,12 +8,14 @@ socket.on('disconnect', ()=>{
 });
 
 socket.on('newMessage', (msg)=>{
-  let li = `<li>${msg.from}: ${msg.text}</li>`;
+  let formattedTime = moment(msg.createdAt).format('h:mm a');
+  let li = `<li>${formattedTime} - ${msg.from}: ${msg.text}</li>`;
   $('#messageBoard').append(li)
 });
 
 socket.on('newLocationMessage', (msg)=>{
-  let li = `<li>${msg.from}: <a target="_blank" href="${msg.url}">${msg.url}</a>`;
+  let formattedTime = moment(msg.createdAt).format('h:mm a');
+  let li = `<li>${formattedTime} - ${msg.from}: <a target="_blank" href="${msg.url}">${msg.url}</a>`;
   $('#messageBoard').append(li)
 });
 
