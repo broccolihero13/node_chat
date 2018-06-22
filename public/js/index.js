@@ -9,14 +9,25 @@ socket.on('disconnect', ()=>{
 
 socket.on('newMessage', (msg)=>{
   let formattedTime = moment(msg.createdAt).format('h:mm a');
-  let li = `<li>${formattedTime} - ${msg.from}: ${msg.text}</li>`;
-  $('#messageBoard').append(li)
+  let template = $('#message-template').html();
+  let html = Mustache.render(template,{
+    formattedTime,
+    text: msg.text,
+    from: msg.from
+  });
+
+  $('#messageBoard').append(html);
 });
 
 socket.on('newLocationMessage', (msg)=>{
   let formattedTime = moment(msg.createdAt).format('h:mm a');
-  let li = `<li>${formattedTime} - ${msg.from}: <a target="_blank" href="${msg.url}">${msg.url}</a>`;
-  $('#messageBoard').append(li)
+  let template = $('#location-message-template').html();
+  let html = Mustache.render(template,{
+    formattedTime,
+    url: msg.url,
+    from: msg.from
+  });
+  $('#messageBoard').append(html);
 });
 
 $('#message-form').on('submit', (e)=>{
