@@ -20,7 +20,7 @@ io.on('connection', (socket)=>{
       text: msg.text,
       createdAt: new Date()
     });
-    cb(`This is from the server`);
+    cb();
   });
 
   socket.on('createLocationMessage', (coords)=>{
