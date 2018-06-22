@@ -1,4 +1,5 @@
 let socket = io();
+// let $ = jQuery;
 socket.on('connect', ()=>{
   // socket.emit(`createMessage`,{
   //   to: 'myfriend@example.com',
@@ -12,5 +13,16 @@ socket.on('disconnect', ()=>{
 });
 
 socket.on('newMessage', (msg)=>{
-  console.log(msg);
+  let li = `<li>${msg.from}: ${msg.text}</li>`
+  $('#messageBoard').append(li)
 })
+
+$('#message-form').on('submit', (e)=>{
+  e.preventDefault();
+  socket.emit('createMessage', {
+    from: `User`,
+    text: $('input[name="primaryText"]').val()
+  }, (fromServer)=>{
+    console.log(fromServer);
+  });
+});

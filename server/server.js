@@ -14,13 +14,13 @@ io.on('connection', (socket)=>{
   console.log('new user connect');
   socket.emit('newMessage', generateMessage(`Admin`, `Welcome to the chat app!`));
   socket.broadcast.emit('newMessage', generateMessage(`Admin`, `New user joined the chat!`));
-  socket.on('createMessage', (msg)=>{
-    console.log(msg);
-    socket.broadcast.emit('newMessage',{
+  socket.on('createMessage', (msg,cb)=>{
+    io.emit('newMessage',{
       from: msg.from,
       text: msg.text,
-      createdAt: new Date().getTime()
+      createdAt: new Date()
     });
+    cb(`This is from the server`);
   });
 
   socket.on('disconnect', ()=>{
